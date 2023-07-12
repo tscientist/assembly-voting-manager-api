@@ -5,6 +5,8 @@ import com.api.assemblyvotingmanager.repositories.TopicRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TopicService {
@@ -18,4 +20,9 @@ public class TopicService {
     public TopicModel save(TopicModel topicModel) {
         return topicRepository.save(topicModel);
     }
+
+    public Optional<TopicModel> findById(UUID id) {
+        return topicRepository.findById(id);
+    }
+
 }

@@ -11,7 +11,6 @@ public class TopicDto {
     @NotBlank
     @Size(max = 512)
     private String description;
-    private Integer sessionEnd;
 
     public String getTitle() {
         return title;
@@ -29,11 +28,4 @@ public class TopicDto {
         this.description = description;
     }
 
-    public Integer getSessionEnd() {
-        return sessionEnd;
-    }
-
-    public void setSessionEnd(Integer sessionEnd) {
-        this.sessionEnd = sessionEnd;
-    }
 }

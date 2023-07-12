@@ -1,6 +1,7 @@
 package com.api.assemblyvotingmanager.controllers;
 
 import com.api.assemblyvotingmanager.dto.TopicDto;
+import com.api.assemblyvotingmanager.dto.TopicVoteSessionDto;
 import com.api.assemblyvotingmanager.models.TopicModel;
 import com.api.assemblyvotingmanager.services.TopicService;
 import org.springframework.beans.BeanUtils;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -23,18 +26,38 @@ public class TopicController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveParkingSpot(@RequestBody @Valid TopicDto topicDto){
+    public ResponseEntity<Object> saveTopic(@RequestBody @Valid TopicDto topicDto){
         var topicModel = new TopicModel();
         BeanUtils.copyProperties(topicDto, topicModel);
+        topicModel.setSessionStart(null);
+        topicModel.setSessionEnd(null);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(topicService.save(topicModel));
+    }
+
+    @PutMapping
+    @RequestMapping("/{id}")
+    public ResponseEntity<Object> startTopicVotingSession(@PathVariable(value = "id") UUID id, @RequestBody @Valid TopicVoteSessionDto topicVoteSessionDto){
+        Optional<TopicModel> topicModelOptional = topicService.findById(id);
+
+        if (!topicModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Topic not found.");
+        }
+
+        if (topicModelOptional.get().getSessionStart() != null) {
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("Topic already has a polling session in action or held.");
+        }
+
+        var topicModel = new TopicModel();
+        BeanUtils.copyProperties(topicModelOptional.get(), topicModel);
         topicModel.setSessionStart(LocalDateTime.now(ZoneId.of("UTC")));
-        if (topicDto.getSessionEnd() != null) {
-            topicModel.setSessionEnd(topicModel.getSessionStart().plusMinutes(topicDto.getSessionEnd()));
+
+        if (topicVoteSessionDto.getSessionEnd() != null) {
+            topicModel.setSessionEnd(topicModel.getSessionStart().plusMinutes(topicVoteSessionDto.getSessionEnd()));
         } else {
             topicModel.setSessionEnd(LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(1));
         }
-//        topicModel.setVotesAgainst(0);
-//        topicModel.setVotesInFavor(0);
-//        topicModel.setApproved(false);
-        return ResponseEntity.status(HttpStatus.CREATED).body(topicService.save(topicModel));
+
+        return ResponseEntity.status(HttpStatus.OK).body(topicService.save(topicModel));
     }
 }

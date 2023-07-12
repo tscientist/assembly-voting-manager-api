@@ -17,10 +17,10 @@ public class TopicModel implements Serializable {
     private String title;
     @Column(nullable = false, length = 512)
     private String description;
-    @Column(nullable = false)
-    private LocalDateTime sessionStart;
-    @Column(nullable = false)
-    private LocalDateTime sessionEnd;
+    @Column()
+    private LocalDateTime sessionStart = null;
+    @Column()
+    private LocalDateTime sessionEnd = null;
     @Column(nullable = false)
     private Integer votesInFavor = 0;
     @Column(nullable = false)
