@@ -2,6 +2,8 @@ package com.api.assemblyvotingmanager.services;
 
 import com.api.assemblyvotingmanager.models.TopicModel;
 import com.api.assemblyvotingmanager.repositories.TopicRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,6 +25,10 @@ public class TopicService {
 
     public Optional<TopicModel> findById(UUID id) {
         return topicRepository.findById(id);
+    }
+
+    public Page<TopicModel> findAll(Pageable pageable) {
+        return topicRepository.findAll(pageable);
     }
 
 }
