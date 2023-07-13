@@ -1,13 +1,14 @@
 package com.api.assemblyvotingmanager.controllers;
 
 import com.api.assemblyvotingmanager.dto.TopicDto;
+import com.api.assemblyvotingmanager.dto.TopicVoteResultDto;
 import com.api.assemblyvotingmanager.dto.TopicVoteSessionDto;
 import com.api.assemblyvotingmanager.models.TopicModel;
 import com.api.assemblyvotingmanager.models.VoteModel;
-import com.api.assemblyvotingmanager.repositories.VoteRepository;
 import com.api.assemblyvotingmanager.services.TopicService;
+import com.api.assemblyvotingmanager.services.VoteService;
+import org.json.JSONException;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,10 +29,11 @@ import java.util.UUID;
 @RequestMapping("/topic")
 public class TopicController {
     final TopicService topicService;
-    @Autowired
-    VoteRepository voteRepository;
-    public TopicController(TopicService topicService) {
+    final VoteService voteService;
+
+    public TopicController(TopicService topicService, VoteService voteService) {
         this.topicService = topicService;
+        this.voteService = voteService;
     }
 
     @PostMapping
@@ -74,7 +76,14 @@ public class TopicController {
     }
 
     @GetMapping("/result")
-    public ResponseEntity<List<VoteModel>> getResult(@RequestParam UUID topicId) {
-        return new ResponseEntity<>(voteRepository.findByTopicId(topicId), HttpStatus.OK);
+    public ResponseEntity<TopicVoteResultDto> getResult(@RequestParam UUID topicId) throws JSONException {
+        List<VoteModel> votes = voteService.findVotesByTopic(topicId);
+        Integer votesInFavor = voteService.getVotes(votes, "Sim");
+        Integer votesAgainst = voteService.getVotes(votes, "Não");
+        Boolean approved = voteService.isApproved(votesInFavor, votesAgainst);
+
+        var result = new TopicVoteResultDto(votesInFavor, votesAgainst, approved);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

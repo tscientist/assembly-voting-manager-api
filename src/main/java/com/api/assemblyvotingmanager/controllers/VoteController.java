@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -70,8 +69,4 @@ public class VoteController {
         return ResponseEntity.status(HttpStatus.OK).body(voteService.findAll(pageable));
     }
 
-//    @GetMapping("/result")
-//    public ResponseEntity<List<VoteModel>> getResult(@RequestParam UUID topicId) {
-//        return new ResponseEntity<>(voteRepository.findByTopicId(topicId), HttpStatus.OK);
-//    }
 }

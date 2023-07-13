@@ -2,6 +2,7 @@ package com.api.assemblyvotingmanager.services;
 
 import com.api.assemblyvotingmanager.models.VoteModel;
 import com.api.assemblyvotingmanager.repositories.VoteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Service
 
 public class VoteService {
+    @Autowired
     final VoteRepository voteRepository;
 
     public VoteService(VoteRepository voteRepository) {
@@ -29,6 +31,31 @@ public class VoteService {
     }
 
     public List<VoteModel> findVotesByTopic(UUID topicId) {
-        return voteRepository.findAll();
+        try  {
+            List<VoteModel> votes = voteRepository.findByTopicId(topicId);
+            return votes;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Integer getVotes(List<VoteModel> votes, String voteOption) {
+        Integer totalVotes = 0;
+
+        for (VoteModel vote : votes) {
+            if (vote.getVote().equals(voteOption)) {
+                totalVotes++;
+            }
+        }
+
+        return totalVotes;
+    }
+
+    public Boolean isApproved(Integer votesInFavor, Integer votesAgainst) {
+        if (votesInFavor > votesAgainst) {
+            return true;
+        }
+        return false;
     }
 }
