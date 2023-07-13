@@ -13,7 +13,7 @@ public class VoteModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     @Column(nullable = false)
-    private String topicId;
+    private UUID topicId;
 
     @Column(nullable = false)
     private String userId;
@@ -29,11 +29,11 @@ public class VoteModel implements Serializable {
         this.id = id;
     }
 
-    public String getTopicId() {
+    public UUID getTopicId() {
         return topicId;
     }
 
-    public void setTopicId(String topicId) {
+    public void setTopicId(UUID topicId) {
         this.topicId = topicId;
     }
 

@@ -25,8 +25,8 @@ public class TopicModel implements Serializable {
     private Integer votesInFavor = 0;
     @Column(nullable = false)
     private Integer votesAgainst = 0;
-    @Column(nullable = false)
-    private Boolean approved = false;
+    @Column()
+    private Boolean approved = null;
 
     public UUID getId() {
         return id;

@@ -2,6 +2,7 @@ package com.api.assemblyvotingmanager.services;
 
 import com.api.assemblyvotingmanager.models.TopicModel;
 import com.api.assemblyvotingmanager.repositories.TopicRepository;
+import com.api.assemblyvotingmanager.repositories.VoteRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,11 @@ import java.util.UUID;
 @Service
 public class TopicService {
     final TopicRepository topicRepository;
+    final VoteRepository voteRepository;
 
-    public TopicService(TopicRepository topicRepository) {
+    public TopicService(TopicRepository topicRepository, VoteRepository voteRepository) {
         this.topicRepository = topicRepository;
+        this.voteRepository = voteRepository;
     }
 
     @Transactional
@@ -31,4 +34,9 @@ public class TopicService {
         return topicRepository.findAll(pageable);
     }
 
+    public Boolean isApproved(UUID id) {
+        var topic = topicRepository.findById(id);
+
+        return true;
+    }
 }

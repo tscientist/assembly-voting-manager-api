@@ -3,8 +3,11 @@ package com.api.assemblyvotingmanager.controllers;
 import com.api.assemblyvotingmanager.dto.TopicDto;
 import com.api.assemblyvotingmanager.dto.TopicVoteSessionDto;
 import com.api.assemblyvotingmanager.models.TopicModel;
+import com.api.assemblyvotingmanager.models.VoteModel;
+import com.api.assemblyvotingmanager.repositories.VoteRepository;
 import com.api.assemblyvotingmanager.services.TopicService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,7 +28,8 @@ import java.util.UUID;
 @RequestMapping("/topic")
 public class TopicController {
     final TopicService topicService;
-
+    @Autowired
+    VoteRepository voteRepository;
     public TopicController(TopicService topicService) {
         this.topicService = topicService;
     }
@@ -66,5 +71,10 @@ public class TopicController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(topicService.save(topicModel));
+    }
+
+    @GetMapping("/result")
+    public ResponseEntity<List<VoteModel>> getResult(@RequestParam UUID topicId) {
+        return new ResponseEntity<>(voteRepository.findByTopicId(topicId), HttpStatus.OK);
     }
 }
