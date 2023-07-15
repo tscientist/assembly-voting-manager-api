@@ -1,5 +1,6 @@
 package com.api.assemblyvotingmanager.services;
 
+import br.com.caelum.stella.validation.CPFValidator;
 import com.api.assemblyvotingmanager.models.VoteModel;
 import com.api.assemblyvotingmanager.repositories.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +58,24 @@ public class VoteService {
             return true;
         }
         return false;
+    }
+
+    public Boolean validateCpf(String cpf) {
+        CPFValidator cpfValidator = new CPFValidator();
+
+        try {
+            cpfValidator.assertValid(cpf);
+            return true;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Boolean userAlreadyVoted(String cpf, UUID topicId) {
+        if (voteRepository.findAllVotesByCpf(cpf, topicId).isEmpty()) {
+            return false;
+        }
+        return true;
     }
 }

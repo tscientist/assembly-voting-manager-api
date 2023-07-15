@@ -15,16 +15,21 @@ public class VoteModel implements Serializable {
     @Column(nullable = false)
     private UUID topicId;
 
-    @Column(nullable = false)
-    private String userId;
+    public String getCpf() {
+        return cpf;
+    }
 
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    @Column(nullable = false)
+    private String cpf;
     @Column(nullable = false, length = 4)
     private String vote;
-
     public UUID getId() {
         return id;
     }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -32,23 +37,12 @@ public class VoteModel implements Serializable {
     public UUID getTopicId() {
         return topicId;
     }
-
     public void setTopicId(UUID topicId) {
         this.topicId = topicId;
     }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public String getVote() {
         return vote;
     }
-
     public void setVote(String vote) {
         this.vote = vote;
     }

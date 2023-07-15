@@ -7,9 +7,22 @@ public class VoteDto {
     @NotBlank
     @Size(max = 255)
     private String topicId;
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     @NotBlank
     @Size(max = 255)
-    private String userId;
+    private String cpf;
+    @NotBlank
+    @Size(max = 4)
+    private String vote;
+
 
     public String getTopicId() {
         return topicId;
@@ -19,18 +32,6 @@ public class VoteDto {
         this.topicId = topicId;
     }
 
-    @NotBlank
-    @Size(max = 4)
-    private String vote;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public String getVote() {
         return vote;
     }
@@ -38,4 +39,5 @@ public class VoteDto {
     public void setVote(String vote) {
         this.vote = vote;
     }
+
 }

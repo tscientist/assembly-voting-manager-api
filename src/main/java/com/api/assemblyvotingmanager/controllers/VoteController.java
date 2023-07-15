@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,7 +40,7 @@ public class VoteController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveVote(@RequestBody @Valid VoteDto voteDto){
+    public ResponseEntity<Object> save(@RequestBody @Valid VoteDto voteDto){
         try{
             UUID topicUuid = UUID.fromString(voteDto.getTopicId());
             Optional<TopicModel> topicModelOptional = topicService.findById(topicUuid);
@@ -55,9 +57,18 @@ public class VoteController {
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Voting session for this topic has ended.");
             }
 
+            if (!voteService.validateCpf(voteDto.getCpf())) {
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CPF not valid");
+            }
+
+            if (voteService.userAlreadyVoted(voteDto.getCpf(), topicUuid)) {
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("CPF not valid, user already voted.");
+            }
+
             var voteModel = new VoteModel();
             BeanUtils.copyProperties(voteDto, voteModel);
             voteModel.setTopicId(topicUuid);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(voteService.save(voteModel));
         } catch (IllegalArgumentException exception) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Not a valid topic id.");
@@ -69,4 +80,15 @@ public class VoteController {
         return ResponseEntity.status(HttpStatus.OK).body(voteService.findAll(pageable));
     }
 
+    @GetMapping("/validate-cpf")
+    public ResponseEntity<Object> validateCpf(@RequestHeader String cpf){
+        Map<String, String> status = new HashMap<>();
+        status.put("status", "UNABLE_TO_VOTE");
+
+        if (voteService.validateCpf(cpf)) {
+            status.put("status", "ABLE_TO_VOTE");
+        }
+
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
 }
