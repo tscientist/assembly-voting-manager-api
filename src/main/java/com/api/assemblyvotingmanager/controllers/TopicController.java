@@ -83,12 +83,18 @@ public class TopicController {
     }
 
     @GetMapping("/result")
-    public ResponseEntity<TopicVoteResultDto> getResult(@RequestParam UUID topicId) throws JSONException {
+    public ResponseEntity<Object> getResult(@RequestParam UUID topicId) throws JSONException {
         List<VoteModel> votes = voteService.findVotesByTopic(topicId);
         Integer votesInFavor = voteService.getVotes(votes, "Sim");
         Integer votesAgainst = voteService.getVotes(votes, "Não");
-        Boolean approved = voteService.isApproved(votesInFavor, votesAgainst);
 
+        Optional<TopicModel> topic = topicService.findById(topicId);
+
+        if (topic.get().getApproved() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Voting session is still open.");
+        }
+
+        Boolean approved = voteService.isApproved(votesInFavor, votesAgainst);
         var result = new TopicVoteResultDto(votesInFavor, votesAgainst, approved);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
