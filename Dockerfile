@@ -1,9 +1,9 @@
-FROM maven:3.6.3-jdk-11 AS build
-COPY src /usr/src/app/src
-COPY pom.xml /usr/src/app
-RUN mvn -f /usr/src/app/pom.xml clean package
+FROM maven:3.6.0-jdk-11
+WORKDIR /app
+COPY . .
 
-FROM openjdk:11
-COPY --from=build /usr/src/app/target/assembly-voting-manager.jar /opt/assembly-voting-manager.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "assembly-voting-manager.jar"]
+# At build time, only compile the application but do not run it
+RUN mvn clean package -DskipTests -q
+
+# When you launch the container, this will be the main command
+CMD mvn spring-boot:run

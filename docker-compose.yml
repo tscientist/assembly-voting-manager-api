@@ -11,24 +11,17 @@ services:
       - POSTGRES_DB=assembly-voting-manager-db
     networks:
       - mynet
-#  app:
-#    build: .
-#    restart: always
-#    expose:
-#      - 8080
-#    ports:
-#      - "8080:8080"
-#    container_name: app
-#    networks:
-#      - mynet
+  app:
+    build: .
+    restart: always
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
+    container_name: app
+    networks:
+      - mynet
 
 networks:
   mynet:
     driver: bridge
-#    depends_on:
-#      - db
-#    environment:
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:46077/assembly-voting-manager-db
-#      - SPRING_DATASOURCE_USERNAME=compose-postgres
-#      - SPRING_DATASOURCE_PASSWORD=compose-postgres
-#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
