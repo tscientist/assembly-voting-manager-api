@@ -35,5 +35,4 @@ public class AwsSQSConfig {
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsAccessKey, awsSecretKey)))
                 .build();
     }
-
 }

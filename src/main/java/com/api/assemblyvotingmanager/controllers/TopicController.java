@@ -9,6 +9,7 @@ import com.api.assemblyvotingmanager.services.TopicService;
 import com.api.assemblyvotingmanager.services.VoteService;
 import org.json.JSONException;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,6 +32,8 @@ public class TopicController {
     final TopicService topicService;
     final VoteService voteService;
 
+    @Autowired
+    AwsSqsApplicationController awsSqsApplicationController;
     public TopicController(TopicService topicService, VoteService voteService) {
         this.topicService = topicService;
         this.voteService = voteService;
@@ -72,7 +75,11 @@ public class TopicController {
             topicModel.setSessionEnd(LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(1));
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(topicService.save(topicModel));
+        TopicModel topicVotingSession = topicService.save(topicModel);
+
+        awsSqsApplicationController.sendEndVoteSessionMessage(id, topicVoteSessionDto.getSessionEnd());
+
+        return ResponseEntity.status(HttpStatus.OK).body(topicVotingSession);
     }
 
     @GetMapping("/result")
