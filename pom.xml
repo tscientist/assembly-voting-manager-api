@@ -14,7 +14,8 @@
 	<name>assembly-voting-manager</name>
 	<description>API de um gerenciador de votação de assembleia</description>
 	<properties>
-		<java.version>11</java.version>
+			<java.version>11</java.version>
+			<spring-cloud.version>Hoxton.SR6</spring-cloud.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -72,8 +73,36 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-crypto</artifactId>
 		</dependency>
-	</dependencies>
+		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-aws-messaging -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-aws-messaging</artifactId>
+			<version>1.0.3.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-openfeign-core</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-aws -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-aws</artifactId>
+			<version>1.0.1.RELEASE</version>
+		</dependency>
 
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<plugins>
 			<plugin>

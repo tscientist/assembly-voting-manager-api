@@ -1,0 +1,10 @@
+cloud:
+  aws:
+    region:
+      static: sa-east-1
+      auto: false
+    credentials:
+      access-key:
+      secret-key:
+    end-point:
+      uri:
