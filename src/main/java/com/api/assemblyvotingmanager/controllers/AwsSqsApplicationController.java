@@ -73,7 +73,7 @@ public class AwsSqsApplicationController {
 
         topicService.endVoteSession(topicId);
 
-        logger.info("message from SQS Queue {}",message);
+        logger.info("message from SQS Queue {}", message);
     }
 
     public void sendEndVoteSessionMessage(UUID topicId, Integer sessionEnd) {
@@ -81,7 +81,8 @@ public class AwsSqsApplicationController {
         topicEndSessionMessageDto.setSessionEnd(sessionEnd * SECONDS);
         topicEndSessionMessageDto.setTopicId(topicId);
 
-        this.sendMessageToQueue(topicEndSessionMessageDto);
+        logger.info("minutes to end session {}", sessionEnd * SECONDS);
+        this.sendMessageDelayed(topicId.toString(), endpoint, sessionEnd * SECONDS);
     }
 
     public static void main(String[] args) {
