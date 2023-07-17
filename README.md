@@ -13,6 +13,7 @@ API para gerenciamento de votações de assembleia
 - Valid the CPF of the voting member
 - ✨Counts the votes and returns the result of the poll ✨
 
+The API is running on an EC2 instance and can be tested through the url: http://ec2-15-228-43-32.sa-east-1.compute.amazonaws.com:8080 
 
 ## Tech
 
@@ -24,6 +25,7 @@ Assembly voting manager API uses a number of open source projects to work proper
 - [Apache Maven](https://maven.apache.org/) - Maven is a build automation tool used in Java projects.
 - [Docker](https://www.docker.com/) - Docker is a set of paas products that use operating system-level virtualization to deliver software in packages called containers.
 - [Amazon SQS](https://aws.amazon.com/pt/sqs/) - Amazon Simple Queue Service (SQS) allows you to send, store, and receive messages between software components.
+- [Amazon EC2](https://aws.amazon.com/pt/ec2/) - Amazon Elastic Compute Cloud allows users to rent virtual computers on which to run their own applications.
 
 
 And of course Assembly voting manager API itself is open source with a [public repository](https://github.com/tscientist/assembly-voting-manager-api) on GitHub.
