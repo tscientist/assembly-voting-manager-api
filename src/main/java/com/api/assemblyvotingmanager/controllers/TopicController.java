@@ -90,6 +90,10 @@ public class TopicController {
 
         Optional<TopicModel> topic = topicService.findById(topicId);
 
+        if (topic.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Topic id not found.");
+        }
+
         if (topic.get().getApproved() == null) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Voting session is still open.");
         }
